@@ -34,7 +34,7 @@ public:
 	void update_boundaries();	// Update the boundaries to account for periodic boundary condition.
 	void update_boundaries_site(int i, int j); // Update the boundary after one single spin flip.
 
-	bool single_spinflip();		// Update a random spin and return if successfully flipped.
+	bool single_spinflip();		// Update a random spin and return whether flip was successful.
 	double sweep(int N);		// Try to flip spins N times and return the success rate.
 
 	void print_lattice();		// Print the lattice.

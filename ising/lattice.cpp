@@ -54,7 +54,7 @@ double lattice::sweep(int N) {
 }
 
 bool lattice::single_spinflip() {
-	// Update a random spin and return if successfully flipped to calculate acceptance rates.
+	// Update a random spin and return whether flip was successful to calculate acceptance rates.
 	// Get a random site.
 	int i = this->rng->draw_between_int(1,this->K-2);
 	int j = this->rng->draw_between_int(1,this->K-2);
@@ -66,11 +66,11 @@ bool lattice::single_spinflip() {
 	int left = this->lat[i][j-1];
 	int down = this->lat[i+1][j];
 	int right = this->lat[i][j+1];
-	// Calculate the differnce in energy and magnetization.
+	// Calculate the difference in energy and magnetization.
 	int delta_E = 2*s*(up+left+down+right);
 	int delta_M = -2*s;
 
-	// If the energy change is smaller than 0 accept the change everytime.
+	// If the energy change is smaller than 0 accept the change.
 	// If not, accept it with a certain probability.
 	if (delta_E > 0) {
 		double p = std::exp(-this->beta*delta_E);
@@ -91,7 +91,7 @@ bool lattice::single_spinflip() {
 	// Update boundaries.
 	this->update_boundaries_site(i,j);
 
-	// Return true because the spinflip was accepted.
+	// Return true because spinflip was accepted.
 	return true;
 }
 
