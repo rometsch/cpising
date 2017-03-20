@@ -7,14 +7,14 @@
 
 #include "lattice.h"
 
-lattice::lattice(int seed, int L, double beta) {
+lattice::lattice(int L, double beta) {
 	this->L = L;		// Save Lattice size.
 	this->K = L+2;		// Add boundaries.
 
 	this->beta = beta;
 
 	// Initialize random number generator with seed 0.
-	this->seed = seed;
+	this->seed = 0;
 	this->rng = new Rng(seed);
 
 	// Initialize the spin lattice.
@@ -43,22 +43,27 @@ lattice::~lattice() {
 	delete this->rng;
 }
 
-double lattice::sweep(int N) {
+double lattice::sweep_multihit(int Ntry) {
 	// Try to flip spins N times and return the acceptance rate.
-	double acc_rate = 0;
-	for (int i=0 ; i<N; i++) {
-		bool is_accepted = this->single_spinflip();
-		acc_rate += is_accepted;
+	unsigned int try_cnt = 0;
+	for (int i=1; i<K-1; i++) { 	// Loop rows
+		for (int j=1; j<K-1; j++) { // Loop colums
+			for (int t=0; t<Ntry; t++) {
+				if (single_spinflip(i,j)) {		// Try a spinflip.
+					try_cnt += t+1;				// Add number of tries to count.
+					break;						// Proceed with next lattice site.
+				}
+				if (t == Ntry-1) try_cnt += Ntry;
+			}
+		}
 	}
-	return acc_rate/N;
+	double acc_rate = (double) L*L/try_cnt;
+	return acc_rate;
 }
 
-bool lattice::single_spinflip() {
+bool lattice::single_spinflip(int i, int j) {
 	// Update a random spin and return whether flip was successful to calculate acceptance rates.
 	// Get a random site.
-	int i = this->rng->draw_between_int(1,this->K-2);
-	int j = this->rng->draw_between_int(1,this->K-2);
-
 
 	int s = this->lat[i][j];
 	// Propose a spin flip. Don't actually change the spin yet. Change it later if accepted.
@@ -91,7 +96,7 @@ bool lattice::single_spinflip() {
 	// Update boundaries.
 	this->update_boundaries_site(i,j);
 
-	// Return true because spinflip was accepted.
+	// Return true because spin flip was accepted.
 	return true;
 }
 
@@ -177,3 +182,7 @@ double lattice::get_magnetization_density() {
 	return this->M/Lsq;
 }
 
+void lattice::set_seed(int seed) {
+	/* Seed rng */
+	this->rng->reseed(seed);
+}

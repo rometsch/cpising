@@ -6,7 +6,5 @@
 1.0
 # number of data points to calculate
 101
-# seed
-0
 # method
 exact

@@ -24,5 +24,7 @@ public:
 	double draw_between(double min, double max);	// Return a random number between min and max.
 	double draw_between_int(int min, int max);		// Return an interger random number with minimum min and maximum max.
 	int draw_spin();								// Return a random spin, either -1 or 1.
+
+	void reseed(int seed);	// Reseed.
 };
 #endif /* RNG_H_ */

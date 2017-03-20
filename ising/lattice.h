@@ -28,15 +28,15 @@ public:
 
 	double beta;	// Inverse temperature.
 
-	lattice(int seed, int L, double beta);
+	lattice(int L, double beta);
 	virtual ~lattice();
 
 	void thermalize();			// Thermalize the lattice.
 	void update_boundaries();	// Update the boundaries to account for periodic boundary condition.
 	void update_boundaries_site(int i, int j); // Update the boundary after one single spin flip.
 
-	bool single_spinflip();		// Update a random spin and return whether flip was successful.
-	double sweep(int N);		// Try to flip spins N times and return the success rate.
+	bool single_spinflip(int i, int j);		// Try to update spin at (i,j) and return whether flip was successful.
+	double sweep_multihit(int Ntry);		// Try to flip spins N times and return the success rate.
 
 	void print_lattice();		// Print the lattice.
 	void calc_system_vars();	// Calculate inner energy H and magnetization M.
@@ -46,6 +46,8 @@ public:
 
 	double get_energy_density();	// Return the inner energy density.
 	double get_magnetization_density();	// Return the magnetization density.
+
+	void set_seed(int seed);		// Seed the rng.
 };
 
 #endif /* LATTICE_H_ */

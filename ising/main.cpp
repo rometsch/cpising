@@ -24,18 +24,35 @@ int main(int argc, char *argv[]) {
 	double beta_min = 0.0;
 	double beta_max = 1.0;
 	double Npts = 11;
-	int seed = 0;
 	std::string method = "mc";
+	int seed = 0;
+	int Ntry = 1;
+	int Ntherm = 1000;
+	int Nac = 100;
+	int Nsweeps = 20;
 
 	L = parse_parameter(configfile);
 	beta_min = parse_parameter(configfile);
 	beta_max = parse_parameter(configfile);
 	Npts = parse_parameter(configfile);
-	seed = parse_parameter(configfile);
 	std::getline(configfile,method);	// Read comment line.
 	std::getline(configfile,method); 	// Repeat to read content.
+	if (method!="exact") {
+		seed = parse_parameter(configfile);
+		Ntry = parse_parameter(configfile);
+		Ntherm = parse_parameter(configfile);
+		Nac = parse_parameter(configfile);
+		Nsweeps = parse_parameter(configfile);
+	}
 
-	Logger log(seed,L);
+	Logger log(L);
+	if (method!="exact") {
+		log.set_seed(seed);
+		log.set_Ntry(Ntry);
+		log.set_Ntherm(Ntherm);
+		log.set_Nac(Nac);
+		log.set_Nsweeps(Nsweeps);
+	}
 	log.calc_data(beta_min,beta_max,Npts,method);
 }
 

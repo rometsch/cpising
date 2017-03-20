@@ -51,3 +51,9 @@ int Rng::draw_spin() {
 	}
 	return spin;
 }
+
+void Rng::reseed(int seed) {
+	/* Reseed the rng */
+	this->seed = seed;
+	this->generator->seed(seed);
+}
