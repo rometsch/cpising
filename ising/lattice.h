@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 #include "Rng.h"
+#include <cmath>
 
 
 class lattice {
@@ -41,6 +42,7 @@ public:
 	void calc_system_vars();	// Calculate inner energy H and magnetization M.
 
 	void set_beta(double beta);	// Set the inverse temperature parameter.
+	void set_configuration(unsigned int conf);		// Set the configuration of the lattice using the bits of the integer
 
 	double get_energy_density();	// Return the inner energy density.
 	double get_magnetization_density();	// Return the magnetization density.

@@ -131,6 +131,19 @@ void lattice::print_lattice() {
 	}
 }
 
+void lattice::set_configuration(unsigned int conf) {
+	/* Set the configuration of the lattice using the bits of the integer */
+	// Set the lattice configuration bit by bit.
+	for (int i=0; i<L*L; i++) {
+		int line =  i/L + 1;
+		int col = i%L + 1;
+		int bit = (conf >> i) & 1;
+		lat[line][col] = bit;
+		update_boundaries();
+	}
+}
+
+
 void lattice::calc_system_vars() {
 	// Calculate inner energy H and magnetization M.
 	this->H = 0;
