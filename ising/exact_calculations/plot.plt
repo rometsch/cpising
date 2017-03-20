@@ -53,6 +53,13 @@ set style line 5 lt 1 lc rgb "forest-green" lw 1 ps 1
 set ylabel "e"
 set xlabel "{/Symbol b}"
 
+
+#==================================================
+#             Analytic Functions
+#==================================================
+xi(x) = 2*tanh(2*x)/cosh(2*x);
+e(x) = 2 - 1/tanh(2*x) * ( 1 + ( 2*tanh(2*x)**2 - 1 )*(2/pi)*EllipticK(xi(x)) );
+abs_m(x) = (1 - sinh(2*x)**-4)**(1./8);
 #==================================================
 #             Plot
 #==================================================
@@ -63,7 +70,8 @@ set ylabel "e"
 set key bottom left
 plot  file1 u 1:2 title label1 ls 1 w p, \
       file2 u 1:2 title label2 ls 2 w p, \
-      file3 u 1:2 title label3 ls 3 w p
+      file3 u 1:2 title label3 ls 3 w p, \
+      e(x) title "e({/Symbol b})" ls 4
 
 
 
@@ -71,7 +79,8 @@ set ylabel "|m|"
 set key top left
 plot  file1 u 1:4 title label1 ls 1 w p, \
       file2 u 1:4 title label2 ls 2 w p, \
-      file3 u 1:4 title label3 ls 3 w p
+      file3 u 1:4 title label3 ls 3 w p, \
+      abs_m(x) title "|m|({/Symbol b})" ls 4
 
 
 if (writepdf!=1) {
