@@ -17,6 +17,8 @@ Logger::Logger(int L) {
 	this->N_sweeps = 100;
 	this->N_try = 20;
 
+	this->adaptive_multihit = true;
+
 	this->beta = 0.5;
 
 	this->seed = 0;
@@ -38,21 +40,29 @@ void Logger::sim_multihit(double beta) {
 	std::vector<double> e;
 	std::vector<double> m;
 
+	int Ntry = this->N_try;
+
 	// Update inverse temperature.
 	this->beta = beta;
 	this->lat->set_beta(beta);
 	// Thermalize lattice.
+	double current_acc_rate = 0;
 	for (int n=0; n<N_therm; n++) {
-		this->lat->sweep_multihit(N_try);
+		current_acc_rate = this->lat->sweep_multihit(Ntry);
+		if (adaptive_multihit) Ntry = adjust_Ntry(current_acc_rate,Ntry);
 	}
 
 	double acc_rate = 0;
 
 	// Sweep some times.
-	for (int n=0; n<this->N_sweeps; n++) {
-		acc_rate += this->lat->sweep_multihit(N_try);
-		e.push_back(this->lat->get_energy_density());
-		m.push_back(this->lat->get_magnetization_density());
+	for (int n=0; n<this->N_sweeps*N_ac; n++) {
+		current_acc_rate = this->lat->sweep_multihit(Ntry);
+		if (adaptive_multihit) Ntry = adjust_Ntry(current_acc_rate,Ntry);
+		if (n%N_ac == 0) {
+			acc_rate += current_acc_rate;
+			e.push_back(this->lat->get_energy_density());
+			m.push_back(this->lat->get_magnetization_density());
+		}
 	}
 
 	// Calulate means of energy and magnetization.
@@ -82,7 +92,8 @@ void Logger::sim_multihit(double beta) {
 					<< m_mean << "\t"
 					<< abs_m_mean << "\t"
 					<< msq_mean << "\t"
-					<< acc_rate
+					<< acc_rate << "\t"
+					<< Ntry
 					<< std::endl;
 		} else {
 			std::cout << "beta = " << this->beta << std::endl;
@@ -216,4 +227,25 @@ void Logger::set_Nac(int Nac) {
 void Logger::set_Nsweeps(int Nsweeps) {
 	/* Set number of steps to sweep for each configuration. */
 	this->N_sweeps = Nsweeps;
+}
+
+void Logger::set_adaptive_multihit(bool adaptive_multihit) {
+	this->adaptive_multihit = adaptive_multihit;
+}
+
+
+int Logger::adjust_Ntry(double acc_rate, int Ntry) {
+	/* Adjust Ntry to obtain acceptance rate of 0.5. */
+	int Nnew = Ntry;
+	double desired_acc_rate = 0.5;
+	double delta = acc_rate - desired_acc_rate;		// Current acc rate - desired acc rate.
+//	double gain = 100;
+//	Nnew = Ntry - delta*gain;
+	if (delta > 0) Nnew = Ntry +1;
+	if (delta < 0) Nnew = Ntry -1;
+	// Adjust to the interval [0.1,10]*initial Ntry
+	if (Nnew > 10*N_try) Nnew = 10*N_try;
+	if (Nnew < 0.1*N_try) Nnew = 0.1*N_try;
+//	std::cout << "acc_rate = " << acc_rate << "\t Ntry = " << Ntry << "\t Nnew = " << Nnew << std::endl;
+	return Nnew;
 }

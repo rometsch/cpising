@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
 	std::string method = "mc";
 	int seed = 0;
 	int Ntry = 1;
+	bool adaptive_multihit = true;
 	int Ntherm = 1000;
 	int Nac = 100;
 	int Nsweeps = 20;
@@ -40,6 +41,7 @@ int main(int argc, char *argv[]) {
 	if (method!="exact") {
 		seed = parse_parameter(configfile);
 		Ntry = parse_parameter(configfile);
+		adaptive_multihit = parse_parameter(configfile);
 		Ntherm = parse_parameter(configfile);
 		Nac = parse_parameter(configfile);
 		Nsweeps = parse_parameter(configfile);
@@ -52,6 +54,7 @@ int main(int argc, char *argv[]) {
 		log.set_Ntherm(Ntherm);
 		log.set_Nac(Nac);
 		log.set_Nsweeps(Nsweeps);
+		log.set_adaptive_multihit(adaptive_multihit);
 	}
 	log.calc_data(beta_min,beta_max,Npts,method);
 }

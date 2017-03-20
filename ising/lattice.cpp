@@ -43,21 +43,25 @@ lattice::~lattice() {
 	delete this->rng;
 }
 
-double lattice::sweep_multihit(int Ntry) {
+double lattice::sweep_multihit(unsigned int Ntry) {
 	// Try to flip spins N times and return the acceptance rate.
 	unsigned int try_cnt = 0;
-	for (int i=1; i<K-1; i++) { 	// Loop rows
-		for (int j=1; j<K-1; j++) { // Loop colums
-			for (int t=0; t<Ntry; t++) {
+	unsigned int site_cnt = 0;
+	bool flipped = false;
+	for (unsigned int i=1; i<K-1; i++) { 	// Loop rows
+		for (unsigned int j=1; j<K-1; j++) { // Loop colums
+			for (unsigned int t=0; t<Ntry; t++) {
 				if (single_spinflip(i,j)) {		// Try a spinflip.
 					try_cnt += t+1;				// Add number of tries to count.
+					flipped = true;
 					break;						// Proceed with next lattice site.
 				}
 				if (t == Ntry-1) try_cnt += Ntry;
 			}
+			if (flipped) site_cnt++;
 		}
 	}
-	double acc_rate = (double) L*L/try_cnt;
+	double acc_rate = (double) site_cnt/try_cnt;
 	return acc_rate;
 }
 

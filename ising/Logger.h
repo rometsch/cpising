@@ -19,6 +19,7 @@ public:
 	int N_ac;			// Steps to destroy autocorrelation.
 	int N_sweeps;		// Number of sweeps.
 	int N_try;			// Number of tries for multihit.
+	bool adaptive_multihit;	// Use an adaptive number of multihits.
 	int seed;			// Seed for rng.
 
 	double beta;
@@ -41,11 +42,14 @@ public:
 
 	void calc_data(double beta_min,double beta_max,int N,std::string method);
 
+	int adjust_Ntry(double acc_rate, int Ntry);		// Adjust Ntry to obtain acceptance rate of 0.5.
+
 	void set_seed(int seed);
 	void set_Ntry(int Ntry);
 	void set_Ntherm(int Ntherm);
 	void set_Nac(int Nac);
 	void set_Nsweeps(int Nsweeps);
+	void set_adaptive_multihit(bool adaptive_multihit);
 };
 
 #endif /* LOGGER_H_ */

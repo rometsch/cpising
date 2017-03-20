@@ -36,7 +36,7 @@ public:
 	void update_boundaries_site(int i, int j); // Update the boundary after one single spin flip.
 
 	bool single_spinflip(int i, int j);		// Try to update spin at (i,j) and return whether flip was successful.
-	double sweep_multihit(int Ntry);		// Try to flip spins N times and return the success rate.
+	double sweep_multihit(unsigned int Ntry);		// Try to flip spins N times and return the success rate.
 
 	void print_lattice();		// Print the lattice.
 	void calc_system_vars();	// Calculate inner energy H and magnetization M.
