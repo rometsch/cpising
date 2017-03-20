@@ -46,11 +46,11 @@ if (writepdf==1) {
 #             Style
 #==================================================
 
-set style line 1 lt 7 ps 0.3 lc rgb "red" lw 1
-set style line 2 lt 7 ps 0.3 lc rgb "orange" lw 1
-set style line 3 lt 7 ps 0.3 lc rgb "#6495ED" lw 1
+set style line 1 lt 1 ps 1 lc rgb "red" lw 1
+set style line 2 lt 2 ps 1 lc rgb "orange" lw 1
+set style line 3 lt 3 ps 1 lc rgb "#6495ED" lw 1
 set style line 4 lt 4 lc rgb "black" lw 1
-set style line 5 lt 1 lc rgb "forest-green" lw 1 ps 1
+set style line 5 lt 5 lc rgb "forest-green" lw 1 ps 1
 
 #set format y "%2.1tx10^{%L}"
 #==================================================
@@ -78,7 +78,7 @@ set samples 100000
 set multiplot layout 1,2
 set ylabel "acceptance rate"
 set key top right
-set yrange [-2:0]
+unset yrange
 plot  file1 u 1:6 ls 1 title label1, \
       file2 u 1:6 ls 2 title label2, \
       file3 u 1:6 ls 3 title label3, \
@@ -90,8 +90,9 @@ plot  file1 u 1:6 ls 1 title label1, \
 
 
 set ylabel "Ntry"
-set key bottom right
+set key top right
 unset yrange
+set logscale y
 plot  file1 u 1:7 ls 1 title label1, \
       file2 u 1:7 ls 2 title label2, \
       file3 u 1:7 ls 3 title label3, \
