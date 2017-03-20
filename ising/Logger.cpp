@@ -93,9 +93,10 @@ void Logger::calc_exact(double beta) {
 	double m_mean = 0;
 	double abs_m_mean = 0;
 	for (int i=0; i<N_configs; i++) {
-		e_mean += this->e[i];
-		m_mean += this->m[i];
-		abs_m_mean += std::abs(this->m[i]);
+		double weight = std::exp(-beta*e[i]);
+		e_mean += weight*this->e[i];
+		m_mean += weight*this->m[i];
+		abs_m_mean += weight*std::abs(this->m[i]);
 	}
 
 	e_mean *= 1./N_configs;
