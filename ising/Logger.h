@@ -9,6 +9,7 @@
 #define LOGGER_H_
 
 #include <vector>
+#include <iostream>
 #include "lattice.h"
 
 class Logger {
@@ -19,14 +20,23 @@ public:
 	int N_sweeps;		// Number of sweeps.
 
 	double beta;
-	std::vector<double> e;
-	std::vector<double> m;
+	std::vector<double> beta_log;
+	std::vector<double> e_log;
+	std::vector<double> m_log;
+	std::vector<double> abs_m_log;
+	std::vector<double> acc_rate_log;
+
+	// Flags for printing out data.
+	bool print;				// Print out data?
+	bool dataformat;		// Use format for plotting?
 
 	Logger(int seed, int L);
 	virtual ~Logger();
 
 	void run_sim(double beta);
 	void calc_exact(double beta);
+
+	void calc_data(double beta_min,double beta_max,int N,std::string method);
 };
 
 #endif /* LOGGER_H_ */
