@@ -111,19 +111,21 @@ void Logger::calc_exact(double beta) {
 	}
 
 	// Calulate means of energy and magnetization.
+	double Z = 0;
 	double e_mean = 0;
 	double m_mean = 0;
 	double abs_m_mean = 0;
 	for (unsigned int i=0; i<N_configs; i++) {
-		double weight = std::exp(-beta*e[i]);
+		double weight = std::exp(-beta*e[i]*Lsq);
+		Z += weight;
 		e_mean += weight*e[i];
 		m_mean += weight*m[i];
 		abs_m_mean += weight*std::abs(m[i]);
 	}
 
-//	e_mean *= 1./N_configs;
-//	m_mean *= 1./N_configs;
-//	abs_m_mean *= 1./N_configs;
+	e_mean *= 1./Z;
+	m_mean *= 1./Z;
+	abs_m_mean *= 1./Z;
 
 	// Print out values.
 	if (print) {

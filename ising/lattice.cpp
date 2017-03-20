@@ -138,6 +138,7 @@ void lattice::set_configuration(unsigned int conf) {
 		int line =  i/L + 1;
 		int col = i%L + 1;
 		int bit = (conf >> i) & 1;
+		bit = (bit == 1) ? 1 : -1;
 		lat[line][col] = bit;
 		update_boundaries();
 	}
@@ -167,10 +168,12 @@ void lattice::set_beta(double beta) {
 
 double lattice::get_energy_density() {
 	// Return the inner energy density.
-	return (double) this->H/this->L/this->L;
+	double Lsq = L*L;
+	return this->H/Lsq;
 }
 double lattice::get_magnetization_density() {
 	// Return the magnetization density.
-	return (double) this->M/this->L/this->L;
+	double Lsq = L*L;
+	return this->M/Lsq;
 }
 
