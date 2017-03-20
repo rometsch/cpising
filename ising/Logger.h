@@ -26,6 +26,7 @@ public:
 	virtual ~Logger();
 
 	void run_sim(double beta);
+	void calc_exact(double beta);
 };
 
 #endif /* LOGGER_H_ */

@@ -66,3 +66,45 @@ void Logger::run_sim(double beta) {
 	std::cout << "<m> = " << m_mean << std::endl;
 	std::cout << "<|m|> = " << abs_m_mean << std::endl;
 }
+
+void Logger::calc_exact(double beta) {
+	/* Calculate the system variables by averaging over all possible states.*/
+
+
+	//Clear the energy and magnetization vectors.
+	this->e.clear();
+	this->m.clear();
+
+	// Update inverse temperature.
+	this->beta = beta;
+	this->lat->set_beta(beta);
+
+	// Sample all configurations.
+	unsigned int N_configs = 2 << lat->L*lat->L;
+	for (unsigned int conf=0; N_configs; conf++) {
+		lat->set_configuration(conf);
+		lat->calc_system_vars();
+		this->e.push_back(this->lat->get_energy_density());
+		this->m.push_back(this->lat->get_magnetization_density());
+	}
+
+	// Calulate means of energy and magnetization.
+	double e_mean = 0;
+	double m_mean = 0;
+	double abs_m_mean = 0;
+	for (int i=0; i<N_configs; i++) {
+		e_mean += this->e[i];
+		m_mean += this->m[i];
+		abs_m_mean += std::abs(this->m[i]);
+	}
+
+	e_mean *= 1./N_configs;
+	m_mean *= 1./N_configs;
+	abs_m_mean *= 1./N_configs;
+
+
+	std::cout << "beta = " << this->beta << std::endl;
+	std::cout << "<epsilon> = " << e_mean << std::endl;
+	std::cout << "<m> = " << m_mean << std::endl;
+	std::cout << "<|m|> = " << abs_m_mean << std::endl;
+}
