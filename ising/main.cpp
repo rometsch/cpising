@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
 	// ./ising seed L beta
 
 	std::string config_filename = "ising_config.txt";
+	if (argc>1) config_filename = argv[1];
 
 	std::ifstream configfile;
 	configfile.open(config_filename);

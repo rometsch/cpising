@@ -121,9 +121,9 @@ void Logger::calc_exact(double beta) {
 		abs_m_mean += weight*std::abs(m[i]);
 	}
 
-	e_mean *= 1./N_configs;
-	m_mean *= 1./N_configs;
-	abs_m_mean *= 1./N_configs;
+//	e_mean *= 1./N_configs;
+//	m_mean *= 1./N_configs;
+//	abs_m_mean *= 1./N_configs;
 
 	// Print out values.
 	if (print) {
@@ -159,18 +159,18 @@ void Logger::calc_data(double beta_min,double beta_max,int N,std::string method)
 	std::cout << "# 2d Ising model" << std::endl;
 	std::cout << "# L = " << lat->L << std::endl;
 	std::cout << "# method = " << method << std::endl;
-	if (method.compare("mc")){
+	if (method == "mc") {
 		std::cout << "# beta \t e \t m \t |m| \t accRate" << std::endl;
 	}
-	if (method.compare("exact")){
+	if (method == "exact") {
 		std::cout << "# beta \t e \t m \t |m|" << std::endl;
 	}
 	for (int i=0; i<N; i++) {
 		double b = beta_min + 1.0*i/(N-1)*(beta_max-beta_min);
-		if (method.compare("mc")){
+		if (method == "mc"){
 			run_sim(b);
 		}
-		if (method.compare("exact")){
+		if (method == "exact") {
 			calc_exact(b);
 		}
 	}
