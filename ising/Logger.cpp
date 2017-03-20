@@ -26,8 +26,8 @@ Logger::~Logger() {
 void Logger::run_sim(double beta) {
 
 	//Clear the energy and magnetization vectors.
-	this->e.clear();
-	this->m.clear();
+	std::vector<double> e;
+	std::vector<double> m;
 
 	// Update inverse temperature.
 	this->beta = beta;
@@ -40,8 +40,8 @@ void Logger::run_sim(double beta) {
 	// Sweep some times.
 	for (int n=0; n<this->N_sweeps; n++) {
 		acc_rate += this->lat->sweep(N_a);
-		this->e.push_back(this->lat->get_energy_density());
-		this->m.push_back(this->lat->get_magnetization_density());
+		e.push_back(this->lat->get_energy_density());
+		m.push_back(this->lat->get_magnetization_density());
 	}
 
 	// Calulate means of energy and magnetization.
@@ -49,9 +49,9 @@ void Logger::run_sim(double beta) {
 	double m_mean = 0;
 	double abs_m_mean = 0;
 	for (int i=0; i<this->N_sweeps; i++) {
-		e_mean += this->e[i];
-		m_mean += this->m[i];
-		abs_m_mean += std::abs(this->m[i]);
+		e_mean += e[i];
+		m_mean += m[i];
+		abs_m_mean += std::abs(m[i]);
 	}
 
 	e_mean *= 1./this->N_sweeps;
@@ -72,40 +72,56 @@ void Logger::calc_exact(double beta) {
 
 
 	//Clear the energy and magnetization vectors.
-	this->e.clear();
-	this->m.clear();
+	std::vector<double> e;
+	std::vector<double> m;
 
 	// Update inverse temperature.
 	this->beta = beta;
 	this->lat->set_beta(beta);
 
 	// Sample all configurations.
-	unsigned int N_configs = 2 << lat->L*lat->L;
+	int Lsq = lat->L*lat->L;
+	unsigned int N_configs = 2 << Lsq;
 	for (unsigned int conf=0; N_configs; conf++) {
 		lat->set_configuration(conf);
 		lat->calc_system_vars();
-		this->e.push_back(this->lat->get_energy_density());
-		this->m.push_back(this->lat->get_magnetization_density());
+		e.push_back(this->lat->get_energy_density());
+		m.push_back(this->lat->get_magnetization_density());
 	}
 
 	// Calulate means of energy and magnetization.
 	double e_mean = 0;
 	double m_mean = 0;
 	double abs_m_mean = 0;
-	for (int i=0; i<N_configs; i++) {
+	for (unsigned int i=0; i<N_configs; i++) {
 		double weight = std::exp(-beta*e[i]);
-		e_mean += weight*this->e[i];
-		m_mean += weight*this->m[i];
-		abs_m_mean += weight*std::abs(this->m[i]);
+		e_mean += weight*e[i];
+		m_mean += weight*m[i];
+		abs_m_mean += weight*std::abs(m[i]);
 	}
 
 	e_mean *= 1./N_configs;
 	m_mean *= 1./N_configs;
 	abs_m_mean *= 1./N_configs;
 
+	// Print out values.
+	bool print = true;
+	bool dataformat = true;
+	if (print) {
+		if (dataformat) {
+			std::cout << std::scientific << beta << "\t" << e_mean << "\t" << m_mean << "\t" << abs_m_mean << std::endl;
+		} else {
+			std::cout << "beta = " << this->beta << std::endl;
+			std::cout << "<epsilon> = " << e_mean << std::endl;
+			std::cout << "<m> = " << m_mean << std::endl;
+			std::cout << "<|m|> = " << abs_m_mean << std::endl;
+		}
+	}
 
-	std::cout << "beta = " << this->beta << std::endl;
-	std::cout << "<epsilon> = " << e_mean << std::endl;
-	std::cout << "<m> = " << m_mean << std::endl;
-	std::cout << "<|m|> = " << abs_m_mean << std::endl;
+	// Store values in log vectors.
+	beta_log.push_back(beta);
+	e_log.push_back(e_mean);
+	m_log.push_back(m_mean);
+	abs_m_log.push_back(abs_m_mean);
+
 }
