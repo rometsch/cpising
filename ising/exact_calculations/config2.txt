@@ -1,0 +1,12 @@
+# lattice width L
+2
+# minimum beta
+0.0
+# maximum beta
+1.0
+# number of data points to calculate
+101
+# seed
+0
+# method
+exact
