@@ -10,27 +10,12 @@ clear
 #             Definitions
 #==================================================
 
-writepdf = 1;
+writepdf = 0;
 
-file1 = "result_a10.txt";
-file2 = "result_a20.txt";
-file3 = "result_a50.txt";
-file4 = "result_a100.txt";
-file5 = "result_c10.txt";
-file6 = "result_c20.txt";
-file7 = "result_c50.txt";
-file8 = "result_c100.txt";
+file1 = "result1.txt"
+file2 = "result2.txt"
 
-label1 = "a10";
-label2 = "a20";
-label3 = "a50";
-label4 = "a100";
-label5 = "c10";
-label6 = "c20";
-label7 = "c50";
-label8 = "c100";
-
-output_name = "plot_Ntry.pdf";
+output_name = "thermalization.pdf";
 
 #==================================================
 #             Set terminal
@@ -58,8 +43,8 @@ set style line 5 lt 5 lc rgb "forest-green" lw 1 ps 1
 #==================================================
 
 set ylabel "e"
-set xlabel "{/Symbol b}"
-
+set xlabel "N_{therm}"
+set xtics rotate by -45
 
 #==================================================
 #             Analytic Functions
@@ -74,33 +59,33 @@ set samples 100000
 #             Plot
 #==================================================
 
+while (1)  {
+  if (writepdf==0) {clear}
+  set multiplot layout 2,2 columnsfirst
 
-set multiplot layout 1,2
-set ylabel "acceptance rate"
-set key top right
-unset yrange
-plot  file1 u 1:6 ls 1 title label1, \
-      file2 u 1:6 ls 2 title label2, \
-      file3 u 1:6 ls 3 title label3, \
-      file4 u 1:6 ls 4 title label4, \
-      file5 u 1:6 ls 5 title label5, \
-      file6 u 1:6 ls 6 title label6, \
-      file7 u 1:6 ls 7 title label7, \
-      file8 u 1:6 ls 8 title label8
+  set title "{/Symbol b} = 0.8"
+  set key top right
+  unset ylabel
+  plot file1 u 1:2 every ::100 title "e", \
+      file1 u 1:3 every ::100 title "m"
+  set ylabel "acceptance rate"
+  plot file1 u 1:4 every ::100 notitle
 
 
-set ylabel "Ntry"
-set key top right
-unset yrange
-set logscale y
-plot  file1 u 1:7 ls 1 title label1, \
-      file2 u 1:7 ls 2 title label2, \
-      file3 u 1:7 ls 3 title label3, \
-      file4 u 1:7 ls 4 title label4, \
-      file5 u 1:7 ls 5 title label5, \
-      file6 u 1:7 ls 6 title label6, \
-      file7 u 1:7 ls 7 title label7, \
-      file8 u 1:7 ls 8 title label8
+  set title "{/Symbol b}=0.4406"
+  set key top left
+  unset ylabel
+  plot file2 u 1:2 every ::100 title "e", \
+      file2 u 1:3 every ::100 title "m"
+  set ylabel "acceptance rate"
+  plot file2 u 1:4 every ::100 notitle
+
+  if (writepdf==1) {
+    exit
+  }
+
+  pause 2
+}
 
 if (writepdf!=1) {
   pause -1
