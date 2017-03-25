@@ -10,7 +10,7 @@ clear
 #             Definitions
 #==================================================
 
-writepdf = 0;
+writepdf = 1;
 
 file1 = "result_a10.txt";
 file2 = "result_a20.txt";
