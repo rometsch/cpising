@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
 	int seed = 0;
 	int Ntry = 1;
 	bool adaptive_multihit = true;
+	bool output_thermalization_data = false;
 	int Ntherm = 1000;
 	int Nac = 100;
 	int Nsweeps = 20;
@@ -45,6 +46,7 @@ int main(int argc, char *argv[]) {
 		Ntherm = parse_parameter(configfile);
 		Nac = parse_parameter(configfile);
 		Nsweeps = parse_parameter(configfile);
+		output_thermalization_data = parse_parameter(configfile);
 	}
 
 	Logger log(L);
@@ -55,6 +57,7 @@ int main(int argc, char *argv[]) {
 		log.set_Nac(Nac);
 		log.set_Nsweeps(Nsweeps);
 		log.set_adaptive_multihit(adaptive_multihit);
+		log.set_output_thermalization_data(output_thermalization_data);
 	}
 	log.calc_data(beta_min,beta_max,Npts,method);
 }

@@ -20,11 +20,13 @@ public:
 	int N_sweeps;		// Number of sweeps.
 	int N_try;			// Number of tries for multihit.
 	bool adaptive_multihit;	// Use an adaptive number of multihits.
+	bool output_thermalization_data;
 	int seed;			// Seed for rng.
 
 	double beta;
 	std::vector<double> beta_log;
 	std::vector<double> e_log;
+	std::vector<double> esq_log;
 	std::vector<double> m_log;
 	std::vector<double> msq_log;
 	std::vector<double> abs_m_log;
@@ -50,6 +52,7 @@ public:
 	void set_Nac(int Nac);
 	void set_Nsweeps(int Nsweeps);
 	void set_adaptive_multihit(bool adaptive_multihit);
+	void set_output_thermalization_data(bool output_thermalization_data);
 };
 
 #endif /* LOGGER_H_ */

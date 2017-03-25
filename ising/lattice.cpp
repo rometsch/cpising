@@ -61,7 +61,7 @@ double lattice::sweep_multihit(unsigned int Ntry) {
 			if (flipped) site_cnt++;
 		}
 	}
-	double acc_rate = (double) site_cnt/try_cnt;
+	double acc_rate = (double) L*L/try_cnt;
 	return acc_rate;
 }
 

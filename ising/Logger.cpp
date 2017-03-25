@@ -18,6 +18,7 @@ Logger::Logger(int L) {
 	this->N_try = 20;
 
 	this->adaptive_multihit = true;
+	this->output_thermalization_data = false;;
 
 	this->beta = 0.5;
 
@@ -50,6 +51,15 @@ void Logger::sim_multihit(double beta) {
 	for (int n=0; n<N_therm; n++) {
 		current_acc_rate = this->lat->sweep_multihit(Ntry);
 		if (adaptive_multihit) Ntry = adjust_Ntry(current_acc_rate,Ntry);
+		if (output_thermalization_data) {
+			std::cout << std::scientific
+					<< n << "\t"
+					<<lat->get_energy_density() << "\t"
+					<< lat->get_magnetization_density() << "\t"
+					<< current_acc_rate << "\t"
+					<< Ntry
+					<< std::endl;
+		}
 	}
 
 	double acc_rate = 0;
@@ -67,24 +77,28 @@ void Logger::sim_multihit(double beta) {
 
 	// Calulate means of energy and magnetization.
 	double e_mean = 0;
+	double esq_mean = 0;
 	double m_mean = 0;
 	double msq_mean = 0;
 	double abs_m_mean = 0;
 	for (int i=0; i<this->N_sweeps; i++) {
 		e_mean += e[i];
+		esq_mean += e[i]*e[i];
 		m_mean += m[i];
 		msq_mean += m[i]*m[i];
 		abs_m_mean += std::abs(m[i]);
 	}
 
 	e_mean *= 1./this->N_sweeps;
+	esq_mean *= 1./this->N_sweeps;
 	m_mean *= 1./this->N_sweeps;
 	msq_mean *= 1./this->N_sweeps;
 	abs_m_mean *= 1./this->N_sweeps;
 	acc_rate *= 1./this->N_sweeps;
+	double cV = beta*beta*(esq_mean-e_mean*e_mean);
 
 	// Print out values.
-	if (print) {
+	if (print and !output_thermalization_data) {
 		if (dataformat) {
 			std::cout << std::scientific
 					<< beta << "\t"
@@ -93,7 +107,8 @@ void Logger::sim_multihit(double beta) {
 					<< abs_m_mean << "\t"
 					<< msq_mean << "\t"
 					<< acc_rate << "\t"
-					<< Ntry
+					<< Ntry << "\t"
+					<< cV
 					<< std::endl;
 		} else {
 			std::cout << "beta = " << this->beta << std::endl;
@@ -113,6 +128,8 @@ void Logger::sim_multihit(double beta) {
 	acc_rate_log.push_back(acc_rate);
 
 }
+
+
 
 void Logger::calc_exact(double beta) {
 	/* Calculate the system variables by averaging over all possible states.*/
@@ -186,13 +203,16 @@ void Logger::calc_data(double beta_min,double beta_max,int N,std::string method)
 	std::cout << "# L = " << lat->L << std::endl;
 	std::cout << "# method = " << method << std::endl;
 	if (method == "multihit") {
-		std::cout << "# beta \t e \t m \t |m| \t msq \t accRate" << std::endl;
+		std::cout << "# beta \t e \t m \t |m| \t msq \t accRate \t Ntry \t cV" << std::endl;
 	}
 	if (method == "exact") {
 		std::cout << "# beta \t e \t m \t |m|" << std::endl;
 	}
 	for (int i=0; i<N; i++) {
-		double b = beta_min + 1.0*i/(N-1)*(beta_max-beta_min);
+		double b = beta_min;
+		if (N>1) {
+			b = beta_min + 1.0*i/(N-1)*(beta_max-beta_min);
+		}
 		if (method == "multihit"){
 			sim_multihit(b);
 		}
@@ -233,14 +253,16 @@ void Logger::set_adaptive_multihit(bool adaptive_multihit) {
 	this->adaptive_multihit = adaptive_multihit;
 }
 
+void Logger::set_output_thermalization_data(bool output_thermalization_data) {
+	this->output_thermalization_data = output_thermalization_data;
+}
+
 
 int Logger::adjust_Ntry(double acc_rate, int Ntry) {
 	/* Adjust Ntry to obtain acceptance rate of 0.5. */
 	int Nnew = Ntry;
 	double desired_acc_rate = 0.5;
 	double delta = acc_rate - desired_acc_rate;		// Current acc rate - desired acc rate.
-//	double gain = 100;
-//	Nnew = Ntry - delta*gain;
 	if (delta > 0) Nnew = Ntry +1;
 	if (delta < 0) Nnew = Ntry -1;
 	// Adjust to the interval [0.1,10]*initial Ntry
@@ -249,3 +271,5 @@ int Logger::adjust_Ntry(double acc_rate, int Ntry) {
 //	std::cout << "acc_rate = " << acc_rate << "\t Ntry = " << Ntry << "\t Nnew = " << Nnew << std::endl;
 	return Nnew;
 }
+
+
