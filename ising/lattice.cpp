@@ -12,6 +12,7 @@ lattice::lattice(int L, double beta) {
 	this->K = L+2;		// Add boundaries.
 
 	this->beta = beta;
+	this->h = 0;
 
 	// Initialize random number generator with seed 0.
 	this->seed = 0;
@@ -64,6 +65,33 @@ double lattice::sweep_multihit(unsigned int Ntry) {
 	double acc_rate = (double) L*L/try_cnt;
 	return acc_rate;
 }
+
+
+void lattice::sweep_heatbath() {
+	/* Sweep over lattice using heatbath algorithm. */
+	for (unsigned int i=1; i<K-1; i++) { 	// Loop rows
+		for (unsigned int j=1; j<K-1; j++) { // Loop colums
+			int up = this->lat[i-1][j];
+			int left = this->lat[i][j-1];
+			int down = this->lat[i+1][j];
+			int right = this->lat[i][j+1];
+			int delta = up + down + left + right;
+
+			double k = beta*(delta + h);
+			double z = 2*std::cosh(k);
+			double q = std::exp(-k)/z;
+			double r = rng->draw();
+
+			if (r<q) {
+				lat[i][j] = 1;
+			} else {
+				lat[i][j] = -1;
+			}
+			this->update_boundaries_site(i,j);
+		}
+	}
+}
+
 
 bool lattice::single_spinflip(int i, int j) {
 	// Update a random spin and return whether flip was successful to calculate acceptance rates.
@@ -174,6 +202,12 @@ void lattice::set_beta(double beta) {
 	// Set the inverse temperature parameter.
 	this->beta = beta;
 }
+
+void lattice::set_h(double h) {
+	// Set external field.
+	this->h = h;
+}
+
 
 double lattice::get_energy_density() {
 	// Return the inner energy density.

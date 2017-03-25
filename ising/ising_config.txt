@@ -4,10 +4,10 @@
 0.0
 # maximum beta
 1.0
-# number of data points to calculate (enter at least 2)
+# number of data points to calculate (1 to use min beta)
 11
 # method
-multihit
+heatbath
 # seed
 0
 # number of tries for multihit
@@ -20,3 +20,11 @@ multihit
 20
 # number of sweeps
 100
+# output thermalization steps (1->on, 0->off)
+0
+# minimum h (external field)
+0.0
+# maximum h
+1.0
+# number of h's to calculate (1 to use min h)
+1

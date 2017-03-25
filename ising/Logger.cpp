@@ -20,8 +20,6 @@ Logger::Logger(int L) {
 	this->adaptive_multihit = true;
 	this->output_thermalization_data = false;;
 
-	this->beta = 0.5;
-
 	this->seed = 0;
 
 	this->lat = new lattice(L,1);
@@ -44,7 +42,6 @@ void Logger::sim_multihit(double beta) {
 	int Ntry = this->N_try;
 
 	// Update inverse temperature.
-	this->beta = beta;
 	this->lat->set_beta(beta);
 	// Thermalize lattice.
 	double current_acc_rate = 0;
@@ -111,7 +108,7 @@ void Logger::sim_multihit(double beta) {
 					<< cV
 					<< std::endl;
 		} else {
-			std::cout << "beta = " << this->beta << std::endl;
+			std::cout << "beta = " << beta << std::endl;
 			std::cout << "acc_rate = " << acc_rate << std::endl;
 			std::cout << "<epsilon> = " << e_mean << std::endl;
 			std::cout << "<m> = " << m_mean << std::endl;
@@ -126,9 +123,79 @@ void Logger::sim_multihit(double beta) {
 	msq_log.push_back(msq_mean);
 	abs_m_log.push_back(abs_m_mean);
 	acc_rate_log.push_back(acc_rate);
-
 }
 
+void Logger::sim_heatbath(double beta, double h) {
+
+	// Initialize energy and magnetization vectors.
+	std::vector<double> e;
+	std::vector<double> m;
+
+	// Update beta and h.
+	this->lat->set_beta(beta);
+	this->lat->set_h(h);
+
+	// Thermalize lattice.
+	for (int n=0; n<N_therm; n++) {
+		this->lat->sweep_heatbath();
+	}
+
+	// Sweep some times.
+	for (int n=0; n<this->N_sweeps*N_ac; n++) {
+		this->lat->sweep_heatbath();
+		if (n%N_ac == 0) {
+			e.push_back(this->lat->get_energy_density());
+			m.push_back(this->lat->get_magnetization_density());
+		}
+	}
+
+	// Calulate means of energy and magnetization.
+	double e_mean = 0;
+	double esq_mean = 0;
+	double m_mean = 0;
+	double msq_mean = 0;
+	double abs_m_mean = 0;
+	for (int i=0; i<this->N_sweeps; i++) {
+		e_mean += e[i];
+		esq_mean += e[i]*e[i];
+		m_mean += m[i];
+		msq_mean += m[i]*m[i];
+		abs_m_mean += std::abs(m[i]);
+	}
+
+	e_mean *= 1./this->N_sweeps;
+	esq_mean *= 1./this->N_sweeps;
+	m_mean *= 1./this->N_sweeps;
+	msq_mean *= 1./this->N_sweeps;
+	abs_m_mean *= 1./this->N_sweeps;
+	double cV = beta*beta*(esq_mean-e_mean*e_mean);
+
+	// Print out values.
+	if (print and !output_thermalization_data) {
+		if (dataformat) {
+			std::cout << std::scientific
+					<< beta << "\t"
+					<< e_mean << "\t"
+					<< m_mean << "\t"
+					<< abs_m_mean << "\t"
+					<< msq_mean << "\t"
+					<< cV
+					<< std::endl;
+		} else {
+			std::cout << "beta = " << beta << std::endl;
+			std::cout << "<epsilon> = " << e_mean << std::endl;
+			std::cout << "<m> = " << m_mean << std::endl;
+			std::cout << "<|m|> = " << abs_m_mean << std::endl;
+			std::cout << "<msq> = " << msq_mean << std::endl;
+		}
+	}
+	// Store values in log vectors.
+	beta_log.push_back(beta);
+	e_log.push_back(e_mean);
+	m_log.push_back(m_mean);
+	msq_log.push_back(msq_mean);
+	abs_m_log.push_back(abs_m_mean);
+}
 
 
 void Logger::calc_exact(double beta) {
@@ -138,7 +205,6 @@ void Logger::calc_exact(double beta) {
 	std::vector<double> m;
 
 	// Update inverse temperature.
-	this->beta = beta;
 	this->lat->set_beta(beta);
 
 	// Sample all configurations.
@@ -178,7 +244,7 @@ void Logger::calc_exact(double beta) {
 					<< abs_m_mean
 					<< std::endl;
 		} else {
-			std::cout << "beta = " << this->beta << std::endl;
+			std::cout << "beta = " << beta << std::endl;
 			std::cout << "<epsilon> = " << e_mean << std::endl;
 			std::cout << "<m> = " << m_mean << std::endl;
 			std::cout << "<|m|> = " << abs_m_mean << std::endl;
@@ -193,7 +259,7 @@ void Logger::calc_exact(double beta) {
 
 }
 
-void Logger::calc_data(double beta_min,double beta_max,int N,std::string method) {
+void Logger::calc_data(double beta_min,double beta_max,int N_pts_beta, double h_min, double h_max, int N_pts_h,std::string method) {
 	/* Calculate the system variables for N values of beta between beta_min and beta_max using
 	 * either the mutlihit method (method="multihit")
 	 * or the direct calculation (method="exact").
@@ -205,19 +271,31 @@ void Logger::calc_data(double beta_min,double beta_max,int N,std::string method)
 	if (method == "multihit") {
 		std::cout << "# beta \t e \t m \t |m| \t msq \t accRate \t Ntry \t cV" << std::endl;
 	}
+	if (method == "heatbath") {
+		std::cout << "# beta \t e \t m \t |m| \t msq \t - \t - \t cV" << std::endl;
+		}
 	if (method == "exact") {
 		std::cout << "# beta \t e \t m \t |m|" << std::endl;
 	}
-	for (int i=0; i<N; i++) {
-		double b = beta_min;
-		if (N>1) {
-			b = beta_min + 1.0*i/(N-1)*(beta_max-beta_min);
-		}
-		if (method == "multihit"){
-			sim_multihit(b);
-		}
-		if (method == "exact") {
-			calc_exact(b);
+	for (int i=0; i<N_pts_beta; i++) {
+		for (int j=0; j<N_pts_h; j++) {
+			double b = beta_min;
+			double h = h_min;
+			if (N_pts_beta>1) {
+				b = beta_min + 1.0*i/(N_pts_beta-1)*(beta_max-beta_min);
+			}
+			if (N_pts_h>1) {
+				h = h_min + 1.0*j/(N_pts_h-1)*(h_max-h_min);
+			}
+			if (method == "multihit"){
+				sim_multihit(b);
+			}
+			if (method == "heatbath"){
+				sim_heatbath(b,h);
+			}
+			if (method == "exact") {
+				calc_exact(b);
+			}
 		}
 	}
 }
@@ -271,5 +349,3 @@ int Logger::adjust_Ntry(double acc_rate, int Ntry) {
 //	std::cout << "acc_rate = " << acc_rate << "\t Ntry = " << Ntry << "\t Nnew = " << Nnew << std::endl;
 	return Nnew;
 }
-
-

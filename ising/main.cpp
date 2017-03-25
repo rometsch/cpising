@@ -32,6 +32,9 @@ int main(int argc, char *argv[]) {
 	int Ntherm = 1000;
 	int Nac = 100;
 	int Nsweeps = 20;
+	double h_min = 0.0;
+	double h_max = 1.0;
+	int N_pts_h = 1;
 
 	L = parse_parameter(configfile);
 	beta_min = parse_parameter(configfile);
@@ -47,6 +50,11 @@ int main(int argc, char *argv[]) {
 		Nac = parse_parameter(configfile);
 		Nsweeps = parse_parameter(configfile);
 		output_thermalization_data = parse_parameter(configfile);
+		if (method=="heatbath") {
+			h_min = parse_parameter(configfile);
+			h_max = parse_parameter(configfile);
+			N_pts_h = parse_parameter(configfile);
+		}
 	}
 
 	Logger log(L);
@@ -59,7 +67,7 @@ int main(int argc, char *argv[]) {
 		log.set_adaptive_multihit(adaptive_multihit);
 		log.set_output_thermalization_data(output_thermalization_data);
 	}
-	log.calc_data(beta_min,beta_max,Npts,method);
+	log.calc_data(beta_min,beta_max,Npts,h_min,h_max,N_pts_h,method);
 }
 
 

@@ -27,6 +27,7 @@ public:
 	int M;			// Magnetization.
 
 	double beta;	// Inverse temperature.
+	double h;		// External field.
 
 	lattice(int L, double beta);
 	virtual ~lattice();
@@ -37,11 +38,13 @@ public:
 
 	bool single_spinflip(int i, int j);		// Try to update spin at (i,j) and return whether flip was successful.
 	double sweep_multihit(unsigned int Ntry);		// Try to flip spins N times and return the success rate.
+	void sweep_heatbath();		// Sweep with heatbath algorithm.
 
 	void print_lattice();		// Print the lattice.
 	void calc_system_vars();	// Calculate inner energy H and magnetization M.
 
 	void set_beta(double beta);	// Set the inverse temperature parameter.
+	void set_h(double h);		// Set external field.
 	void set_configuration(unsigned int conf);		// Set the configuration of the lattice using the bits of the integer
 
 	double get_energy_density();	// Return the inner energy density.

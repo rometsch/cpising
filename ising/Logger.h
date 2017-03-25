@@ -23,7 +23,6 @@ public:
 	bool output_thermalization_data;
 	int seed;			// Seed for rng.
 
-	double beta;
 	std::vector<double> beta_log;
 	std::vector<double> e_log;
 	std::vector<double> esq_log;
@@ -40,9 +39,10 @@ public:
 	virtual ~Logger();
 
 	void sim_multihit(double beta);
+	void sim_heatbath(double beta, double h);
 	void calc_exact(double beta);
 
-	void calc_data(double beta_min,double beta_max,int N,std::string method);
+	void calc_data(double beta_min,double beta_max,int N_pts_beta, double h_min, double h_max, int N_pts_h,std::string method);
 
 	int adjust_Ntry(double acc_rate, int Ntry);		// Adjust Ntry to obtain acceptance rate of 0.5.
 
