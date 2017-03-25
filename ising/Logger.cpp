@@ -138,6 +138,13 @@ void Logger::sim_heatbath(double beta, double h) {
 	// Thermalize lattice.
 	for (int n=0; n<N_therm; n++) {
 		this->lat->sweep_heatbath();
+		if (output_thermalization_data) {
+			std::cout << std::scientific
+					<< n << "\t"
+					<<lat->get_energy_density() << "\t"
+					<< lat->get_magnetization_density() << "\t"
+					<< std::endl;
+		}
 	}
 
 	// Sweep some times.
@@ -178,7 +185,7 @@ void Logger::sim_heatbath(double beta, double h) {
 					<< e_mean << "\t"
 					<< m_mean << "\t"
 					<< abs_m_mean << "\t"
-					<< msq_mean << "\t"
+					<< msq_mean << "\t" << "\t" << "\t"
 					<< cV
 					<< std::endl;
 		} else {
