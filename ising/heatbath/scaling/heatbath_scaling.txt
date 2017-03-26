@@ -1,0 +1,10 @@
+# Results from scaling test with heatbath algorithm
+# beta = 0.4406868
+# number of thermalization steps = 2000
+# number of steps to destroy autocorrelation = 100
+# number of collected datapoints = 2000 (number of sweeps = 2000*100)
+# Syntax:
+# L   e 	 m 	 |m| 	 msq	 cV
+4 -1.562250e+00	1.537500e-02	8.418750e-01	7.589531e-01	4.749521e-02
+8 -1.485156e+00	1.006250e-02	7.776250e-01	6.456543e-01	1.769320e-02
+32  -1.435861e+00	3.079004e-02	6.591553e-01	4.649259e-01	1.893229e-03
