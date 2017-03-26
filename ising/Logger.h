@@ -23,6 +23,8 @@ public:
 	bool output_thermalization_data;
 	int seed;			// Seed for rng.
 
+	int L;
+
 	std::vector<double> beta_log;
 	std::vector<double> e_log;
 	std::vector<double> esq_log;

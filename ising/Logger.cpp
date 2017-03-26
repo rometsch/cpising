@@ -23,6 +23,7 @@ Logger::Logger(int L) {
 	this->seed = 0;
 
 	this->lat = new lattice(L,1);
+	this->L = L;
 
 	// Flags for printing out data.
 	print = true;			// Print out data?
@@ -306,9 +307,14 @@ void Logger::calc_data(double beta_min,double beta_max,int N_pts_beta, double h_
 			if (method == "heatbath"){
 				sim_heatbath(b,h);
 			}
+			if (method == "heatbath_clean"){
+				this->lat = new lattice(L,1);
+				sim_heatbath(b,h);
+			}
 			if (method == "exact") {
 				calc_exact(b);
 			}
+			std::cout << std::endl;
 		}
 	}
 }
