@@ -41,12 +41,10 @@ void Logger::sim_multihit(double beta) {
 
 	int Ntry = this->N_try;
 
-	// Update inverse temperature.
-	this->lat->set_beta(beta);
 	// Thermalize lattice.
 	double current_acc_rate = 0;
 	for (int n=0; n<N_therm; n++) {
-		current_acc_rate = this->lat->sweep_multihit(Ntry);
+		current_acc_rate = this->lat->sweep_multihit(beta, Ntry);
 		if (adaptive_multihit) Ntry = adjust_Ntry(current_acc_rate,Ntry);
 		if (output_thermalization_data) {
 			std::cout << std::scientific
@@ -63,7 +61,7 @@ void Logger::sim_multihit(double beta) {
 
 	// Sweep some times.
 	for (int n=0; n<this->N_sweeps*N_ac; n++) {
-		current_acc_rate = this->lat->sweep_multihit(Ntry);
+		current_acc_rate = this->lat->sweep_multihit(beta, Ntry);
 		if (adaptive_multihit) Ntry = adjust_Ntry(current_acc_rate,Ntry);
 		if (n%N_ac == 0) {
 			acc_rate += current_acc_rate;
@@ -131,14 +129,11 @@ void Logger::sim_heatbath(double beta, double h) {
 	std::vector<double> e;
 	std::vector<double> m;
 
-	// Update beta and h.
-	this->lat->set_beta(beta);
-	this->lat->set_h(h);
-
 	// Thermalize lattice.
 	for (int n=0; n<N_therm; n++) {
-		this->lat->sweep_heatbath();
+		this->lat->sweep_heatbath(beta,h);
 		if (output_thermalization_data) {
+			lat->calc_system_vars();
 			std::cout << std::scientific
 					<< n << "\t"
 					<<lat->get_energy_density() << "\t"
@@ -149,8 +144,9 @@ void Logger::sim_heatbath(double beta, double h) {
 
 	// Sweep some times.
 	for (int n=0; n<this->N_sweeps*N_ac; n++) {
-		this->lat->sweep_heatbath();
+		this->lat->sweep_heatbath(beta,h);
 		if (n%N_ac == 0) {
+			this->lat->calc_system_vars();
 			e.push_back(this->lat->get_energy_density());
 			m.push_back(this->lat->get_magnetization_density());
 		}
@@ -185,7 +181,9 @@ void Logger::sim_heatbath(double beta, double h) {
 					<< e_mean << "\t"
 					<< m_mean << "\t"
 					<< abs_m_mean << "\t"
-					<< msq_mean << "\t" << "\t" << "\t"
+					<< msq_mean << "\t"
+					<< h << "\t"
+					<< "\t"
 					<< cV
 					<< std::endl;
 		} else {
@@ -210,9 +208,6 @@ void Logger::calc_exact(double beta) {
 	//Clear the energy and magnetization vectors.
 	std::vector<double> e;
 	std::vector<double> m;
-
-	// Update inverse temperature.
-	this->lat->set_beta(beta);
 
 	// Sample all configurations.
 	int Lsq = lat->L*lat->L;
@@ -275,11 +270,22 @@ void Logger::calc_data(double beta_min,double beta_max,int N_pts_beta, double h_
 	std::cout << "# 2d Ising model" << std::endl;
 	std::cout << "# L = " << lat->L << std::endl;
 	std::cout << "# method = " << method << std::endl;
+	std::cout << "# beta_min = " << beta_min << std::endl;
+	std::cout << "# beta_max = " << beta_max << std::endl;
+	std::cout << "# N_pts_beta = " << N_pts_beta << std::endl;
+	std::cout << "# h_min = " << h_min << std::endl;
+	std::cout << "# h_max = " << h_max << std::endl;
+	std::cout << "# N_pts_h = " << N_pts_h << std::endl;
+	if (method != "exeact") {
+		std::cout << "# Ntherm = " << N_therm << std::endl;
+		std::cout << "# Nac = " << N_ac << std::endl;
+		std::cout << "# Number of datapoints = " << N_sweeps << std::endl;
+	}
 	if (method == "multihit") {
 		std::cout << "# beta \t e \t m \t |m| \t msq \t accRate \t Ntry \t cV" << std::endl;
 	}
 	if (method == "heatbath") {
-		std::cout << "# beta \t e \t m \t |m| \t msq \t - \t - \t cV" << std::endl;
+		std::cout << "# beta \t e \t m \t |m| \t msq \t h \t - \t cV" << std::endl;
 		}
 	if (method == "exact") {
 		std::cout << "# beta \t e \t m \t |m|" << std::endl;

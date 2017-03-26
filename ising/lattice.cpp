@@ -11,9 +11,6 @@ lattice::lattice(int L, double beta) {
 	this->L = L;		// Save Lattice size.
 	this->K = L+2;		// Add boundaries.
 
-	this->beta = beta;
-	this->h = 0;
-
 	// Initialize random number generator with seed 0.
 	this->seed = 0;
 	this->rng = new Rng(seed);
@@ -44,7 +41,7 @@ lattice::~lattice() {
 	delete this->rng;
 }
 
-double lattice::sweep_multihit(unsigned int Ntry) {
+double lattice::sweep_multihit(double beta, unsigned int Ntry) {
 	// Try to flip spins N times and return the acceptance rate.
 	unsigned int try_cnt = 0;
 	unsigned int site_cnt = 0;
@@ -52,7 +49,7 @@ double lattice::sweep_multihit(unsigned int Ntry) {
 	for (unsigned int i=1; i<K-1; i++) { 	// Loop rows
 		for (unsigned int j=1; j<K-1; j++) { // Loop colums
 			for (unsigned int t=0; t<Ntry; t++) {
-				if (single_spinflip(i,j)) {		// Try a spinflip.
+				if (single_spinflip(i,j,beta)) {		// Try a spinflip.
 					try_cnt += t+1;				// Add number of tries to count.
 					flipped = true;
 					break;						// Proceed with next lattice site.
@@ -67,7 +64,7 @@ double lattice::sweep_multihit(unsigned int Ntry) {
 }
 
 
-void lattice::sweep_heatbath() {
+void lattice::sweep_heatbath(double beta, double h) {
 	/* Sweep over lattice using heatbath algorithm. */
 	for (unsigned int i=1; i<K-1; i++) { 	// Loop rows
 		for (unsigned int j=1; j<K-1; j++) { // Loop colums
@@ -75,17 +72,16 @@ void lattice::sweep_heatbath() {
 			int left = this->lat[i][j-1];
 			int down = this->lat[i+1][j];
 			int right = this->lat[i][j+1];
-			int delta = up + down + left + right;
+			double delta = up + down + left + right;
 
 			double k = beta*(delta + h);
 			double z = 2*std::cosh(k);
 			double q = std::exp(-k)/z;
-			double r = rng->draw();
-
+			double r = this->rng->draw();
 			if (r<q) {
-				lat[i][j] = 1;
+				this->lat[i][j] = -1;
 			} else {
-				lat[i][j] = -1;
+				this->lat[i][j] = 1;
 			}
 			this->update_boundaries_site(i,j);
 		}
@@ -93,7 +89,7 @@ void lattice::sweep_heatbath() {
 }
 
 
-bool lattice::single_spinflip(int i, int j) {
+bool lattice::single_spinflip(int i, int j, double beta) {
 	// Update a random spin and return whether flip was successful to calculate acceptance rates.
 	// Get a random site.
 
@@ -110,7 +106,7 @@ bool lattice::single_spinflip(int i, int j) {
 	// If the energy change is smaller than 0 accept the change.
 	// If not, accept it with a certain probability.
 	if (delta_E > 0) {
-		double p = std::exp(-this->beta*delta_E);
+		double p = std::exp(-beta*delta_E);
 		double r = this->rng->draw();
 		// Accept the flip if r < p.
 		// If not, don't accept the change and leave the function by returning false.
@@ -196,16 +192,6 @@ void lattice::calc_system_vars() {
 			this->M += s;
 		}
 	}
-}
-
-void lattice::set_beta(double beta) {
-	// Set the inverse temperature parameter.
-	this->beta = beta;
-}
-
-void lattice::set_h(double h) {
-	// Set external field.
-	this->h = h;
 }
 
 

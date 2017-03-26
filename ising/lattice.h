@@ -26,8 +26,6 @@ public:
 	int H;			// Energy.
 	int M;			// Magnetization.
 
-	double beta;	// Inverse temperature.
-	double h;		// External field.
 
 	lattice(int L, double beta);
 	virtual ~lattice();
@@ -36,9 +34,9 @@ public:
 	void update_boundaries();	// Update the boundaries to account for periodic boundary condition.
 	void update_boundaries_site(int i, int j); // Update the boundary after one single spin flip.
 
-	bool single_spinflip(int i, int j);		// Try to update spin at (i,j) and return whether flip was successful.
-	double sweep_multihit(unsigned int Ntry);		// Try to flip spins N times and return the success rate.
-	void sweep_heatbath();		// Sweep with heatbath algorithm.
+	bool single_spinflip(int i, int j, double beta);		// Try to update spin at (i,j) and return whether flip was successful.
+	double sweep_multihit(double beta, unsigned int Ntry);		// Try to flip spins N times and return the success rate.
+	void sweep_heatbath(double beta, double h);		// Sweep with heatbath algorithm.
 
 	void print_lattice();		// Print the lattice.
 	void calc_system_vars();	// Calculate inner energy H and magnetization M.
