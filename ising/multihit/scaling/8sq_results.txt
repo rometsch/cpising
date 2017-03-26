@@ -1,0 +1,5 @@
+# 2d Ising model
+# L = 8
+# method = multihit
+# beta 	 e 	 m 	 |m| 	 msq 	 accRate 	 Ntry 	 cV
+4.406868e-01	-3.456563e-03	-7.453125e-05	1.060745e-01	1.781906e-02	4.028569e-01	30	8.000426e-03
