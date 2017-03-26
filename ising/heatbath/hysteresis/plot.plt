@@ -1,6 +1,6 @@
 #==================================================
 #         Author : Thomas Rometsch
-#      Plot name : 2d Ising model scaling
+#      Plot name : 2d Ising model exact calculations
 #==================================================
 
 reset
@@ -12,13 +12,19 @@ clear
 
 writepdf = 1;
 
-file1 = "heatbath_scaling.txt"
-file2 = "multihit_scaling.txt"
+file1 = "results_pos.txt"
+file2 = "results_neg.txt"
+file3 = "results_pos_32.txt"
+file4 = "results_neg_32.txt"
 
-label1 = "heatbath"
-label2 = "multihit"
 
-output_name = "scaling.pdf"
+
+label1 = "L=8, pos"
+label2 = "L=8, neg"
+label3 = "L=32, pos"
+label4 = "L=32, neg"
+
+output_name = "hysteresis.pdf"
 
 #==================================================
 #             Set terminal
@@ -34,10 +40,10 @@ if (writepdf==1) {
 #             Style
 #==================================================
 
-set style line 1 lt 7 ps 0.3 lc rgb "red" lw 1
-set style line 2 lt 7 ps 0.3 lc rgb "orange" lw 1
-set style line 3 lt 7 ps 0.3 lc rgb "#6495ED" lw 1
-set style line 4 lt 4 lc rgb "black" lw 1
+set style line 1 lt 1 ps 1 lc rgb "red" lw 1
+set style line 2 lt 3 ps 1 lc rgb "orange" lw 1
+set style line 3 lt 2 ps 1 lc rgb "#6495ED" lw 1
+set style line 4 lt 4 ps 1 lc rgb "black" lw 1
 set style line 5 lt 1 lc rgb "forest-green" lw 1 ps 1
 
 #set format y "%2.1tx10^{%L}"
@@ -45,8 +51,8 @@ set style line 5 lt 1 lc rgb "forest-green" lw 1 ps 1
 #             Axis Labels
 #==================================================
 
-set ylabel "e"
-set xlabel "1/L"
+set ylabel "m"
+set xlabel "h"
 
 
 #==================================================
@@ -63,19 +69,14 @@ set samples 100000
 #==================================================
 
 
-set multiplot layout 2,1
+set key bottom right
+set yrange [-1.1:1.1]
+plot  file1 u 6:3 title label1 ls 1 w lp, \
+    file2 u 6:3 title label2 ls 2 w lp, \
+    file3 u 6:3 title label3 ls 3 w lp, \
+    file4 u 6:3 title label4 ls 4 w lp
 
-set ylabel "|m|"
-set key center right
-plot  file1 u (1/$1):4 title label1 ls 1 w lp, \
-      file2 u (1/$1):4 title label2 ls 2 w lp, \
-      abs_m(0.4406868)
 
-set ylabel "e"
-set key center right
-plot  file1 u (1/$1):2 title label1 ls 1 w lp, \
-      file2 u (1/$1):2 title label2 ls 2 w lp, \
-      e(0.4406868)
 
 if (writepdf!=1) {
   pause -1
