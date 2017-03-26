@@ -314,8 +314,8 @@ void Logger::calc_data(double beta_min,double beta_max,int N_pts_beta, double h_
 			if (method == "exact") {
 				calc_exact(b);
 			}
-			std::cout << std::endl;
 		}
+		std::cout << std::endl;
 	}
 }
 
