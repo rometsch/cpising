@@ -1,0 +1,14 @@
+# 2d Ising model
+# L = 32
+# method = heatbath
+# beta_min = 0.440687
+# beta_max = 1
+# N_pts_beta = 1
+# h_min = 0
+# h_max = 1
+# N_pts_h = 1
+# Ntherm 2000
+# Nac 100
+# Number of datapoints 2000
+# beta 	 e 	 m 	 |m| 	 msq 	 h 	 - 	 cV
+4.406868e-01	-1.435861e+00	3.079004e-02	6.591553e-01	4.649259e-01	0.000000e+00		1.893229e-03
