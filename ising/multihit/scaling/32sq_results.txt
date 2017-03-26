@@ -1,5 +1,14 @@
 # 2d Ising model
 # L = 32
 # method = multihit
+# beta_min = 0.440687
+# beta_max = 1
+# N_pts_beta = 1
+# h_min = 0
+# h_max = 1
+# N_pts_h = 1
+# Ntherm 10000
+# Nac 100
+# Number of datapoints 2000
 # beta 	 e 	 m 	 |m| 	 msq 	 accRate 	 Ntry 	 cV
-4.406868e-01	-3.227441e-03	5.746094e-05	2.837965e-02	1.264001e-03	3.918687e-01	30	5.143979e-04
+4.406868e-01	2.804687e-03	8.222656e-04	2.934961e-02	1.306877e-03	3.913909e-01	30	4.943087e-04
