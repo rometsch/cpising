@@ -285,7 +285,7 @@ void Logger::calc_data(double beta_min,double beta_max,int N_pts_beta, double h_
 	if (method == "multihit") {
 		std::cout << "# beta \t e \t m \t |m| \t msq \t accRate \t Ntry \t cV" << std::endl;
 	}
-	if (method == "heatbath") {
+	if (method == "heatbath" or method=="heatbath_clean") {
 		std::cout << "# beta \t e \t m \t |m| \t msq \t h \t - \t cV" << std::endl;
 		}
 	if (method == "exact") {
@@ -302,6 +302,7 @@ void Logger::calc_data(double beta_min,double beta_max,int N_pts_beta, double h_
 				h = h_min + 1.0*j/(N_pts_h-1)*(h_max-h_min);
 			}
 			if (method == "multihit"){
+				this->lat = new lattice(L,1);
 				sim_multihit(b);
 			}
 			if (method == "heatbath"){

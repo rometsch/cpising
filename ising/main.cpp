@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 		Nac = parse_parameter(configfile);
 		Nsweeps = parse_parameter(configfile);
 		output_thermalization_data = parse_parameter(configfile);
-		if (method=="heatbath") {
+		if (method=="heatbath" or method=="heatbath_clean") {
 			h_min = parse_parameter(configfile);
 			h_max = parse_parameter(configfile);
 			N_pts_h = parse_parameter(configfile);
