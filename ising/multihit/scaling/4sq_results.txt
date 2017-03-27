@@ -7,8 +7,9 @@
 # h_min = 0
 # h_max = 1
 # N_pts_h = 1
-# Ntherm 10000
-# Nac 100
-# Number of datapoints 2000
+# Ntherm = 10000
+# Nac = 100
+# Number of datapoints = 2000
 # beta 	 e 	 m 	 |m| 	 msq 	 accRate 	 Ntry 	 cV
-4.406868e-01	-7.000000e-03	2.093750e-02	1.920625e-01	6.075781e-02	4.322974e-01	30	2.600180e-02
+4.406868e-01	-1.570000e+00	1.125000e-03	8.481250e-01	7.656250e-01	1.443031e-01	10	4.769671e-02
+
