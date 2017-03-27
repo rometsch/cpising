@@ -36,9 +36,9 @@ if (writepdf==1) {
 #             Style
 #==================================================
 
-set style line 1 lt 1 ps 1 lc rgb "red" lw 1
-set style line 2 lt 2 ps 1 lc rgb "orange" lw 1
-set style line 3 lt 3 ps 1 lc rgb "#6495ED" lw 1
+set style line 1 lt 1 ps 0.3 lc rgb "#6495ED" lw 1
+set style line 2 lt 2 ps 0.3 lc rgb "orange" lw 1
+set style line 3 lt 3 ps 0.3 lc rgb "red" lw 1
 set style line 4 lt 4 lc rgb "black" lw 1
 set style line 5 lt 5 lc rgb "forest-green" lw 1 ps 1
 
@@ -69,41 +69,41 @@ set multiplot layout 3,2
 set title "{/Symbol b} = 0.2, h = 0"
 set key center right
 unset ylabel
-plot [x=0:500] file1 u 1:2 every ::1 title "e", \
-    file1 u 1:3 every ::1 title "m"
+plot [x=0:500] file1 u 1:2 every ::1 ls 1 title "e", \
+    file1 u 1:3 every ::1 ls 2 title "m"
 
 
 set title "{/Symbol b}=0.2, h = 1"
 set key center right
 unset ylabel
-plot [x=0:500] file2 u 1:2 every ::1 title "e", \
-    file2 u 1:3 every ::1 title "m"
+plot [x=0:500] file2 u 1:2 every ::1 ls 1 title "e", \
+    file2 u 1:3 every ::1 ls 2 title "m"
 
 set title "{/Symbol b} = 0.8, h = 0"
 set key center right
 unset ylabel
-plot [x=0:2500] file3 u 1:2 every ::1 title "e", \
-    file3 u 1:3 every ::1 title "m"
+plot [x=0:2500] file3 u 1:2 every ::1 ls 1 title "e", \
+    file3 u 1:3 every ::1 ls 2 title "m"
 
 
 set title "{/Symbol b}=0.8, h = 1"
 set key center right
 unset ylabel
-plot [x=0:2500] file4 u 1:2 every ::1 title "e", \
-    file4 u 1:3 every ::1 title "m"
+plot [x=0:2500] file4 u 1:2 every ::1 ls 1 title "e", \
+    file4 u 1:3 every ::1 ls 2 title "m"
 
 set title "{/Symbol b} = 0.4406868, h = 0"
 set key center right
 unset ylabel
-plot [x=0:2500] file5 u 1:2 every ::1 title "e", \
-    file5 u 1:3 every ::1 title "m"
+plot [x=0:2500] file5 u 1:2 every ::1 ls 1 title "e", \
+    file5 u 1:3 every ::1 ls 2 title "m"
 
 
 set title "{/Symbol b}=0.4406868, h = 1"
 set key center right
 unset ylabel
-plot [x=0:2500] file6 u 1:2 every ::1 title "e", \
-    file6 u 1:3 every ::1 title "m"
+plot [x=0:2500] file6 u 1:2 every ::1 ls 1 title "e", \
+    file6 u 1:3 every ::1 ls 2 title "m"
 
 
 
