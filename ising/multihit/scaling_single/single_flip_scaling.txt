@@ -1,0 +1,11 @@
+# Results from scaling test with single spinflip algorithm
+# beta = 0.4406868
+# number of thermalization steps = 1000000
+# number of steps to destroy autocorrelation = 100
+# number of collected datapoints = 20000 (number of sweeps = 20000*100)
+# number of multihits = 1
+# Syntax:
+# L   e 	 m 	 |m| 	 msq	 cV
+4 -1.562663e+00	6.500000e-04	8.426000e-01	7.593250e-01	4.895085e-02
+8 -1.492588e+00	7.212500e-03	7.762781e-01	6.457638e-01	1.782758e-02
+32  -1.433724e+00	1.534863e-02	6.548246e-01	4.593177e-01 1.803424e-03

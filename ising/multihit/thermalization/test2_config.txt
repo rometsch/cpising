@@ -1,7 +1,7 @@
 # lattice width L
 128
 # minimum beta
-0.4406
+0.4406868
 # maximum beta
 1.0
 # number of data points to calculate (enter at least 2)
@@ -11,7 +11,7 @@ multihit
 # seed
 0
 # number of tries for multihit
-30
+10
 # adaptive number of tries (1->on, 0->off)
 0
 # number of thermalization steps

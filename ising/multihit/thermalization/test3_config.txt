@@ -1,7 +1,7 @@
 # lattice width L
 128
 # minimum beta
-0.8
+0.2
 # maximum beta
 1.0
 # number of data points to calculate (enter at least 2)

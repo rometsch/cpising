@@ -1,0 +1,15 @@
+# 2d Ising model
+# L = 8
+# method = multihit
+# beta_min = 0.440687
+# beta_max = 1
+# N_pts_beta = 1
+# h_min = 0
+# h_max = 1
+# N_pts_h = 1
+# Ntherm = 1000000
+# Nac = 100
+# Number of datapoints = 20000
+# beta 	 e 	 m 	 |m| 	 msq 	 accRate 	 Ntry 	 cV
+4.406868e-01	-1.492588e+00	7.212500e-03	7.762781e-01	6.457638e-01	1.000000e+00	1	1.782758e-02
+
