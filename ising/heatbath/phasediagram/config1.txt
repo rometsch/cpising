@@ -3,9 +3,9 @@
 # minimum beta
 0.0
 # maximum beta
-1.0
+0.5
 # number of data points to calculate (1 to use min beta)
-5
+11
 # method
 heatbath_clean
 # seed
@@ -13,7 +13,7 @@ heatbath_clean
 # number of tries for multihit
 20
 # adaptive number of tries (1->on, 0->off)
-0
+1
 # number of thermalization steps
 10000
 # number of steps to destroy autocorrelation
@@ -27,4 +27,4 @@ heatbath_clean
 # maximum h
 0.3
 # number of h's to calculate (1 to use min h)
-5
+21

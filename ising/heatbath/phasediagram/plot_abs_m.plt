@@ -16,7 +16,7 @@ file1 = "results.txt"
 
 label1 = "L=32"
 
-output_name = "phasediagram_abs_m.pdf"
+output_name = "phasediagram.pdf"
 
 #==================================================
 #             Set terminal
@@ -45,7 +45,7 @@ set style line 5 lt 1 lc rgb "forest-green" lw 1 ps 1
 
 set xlabel "{/Symbol b}"
 set ylabel "h"
-set zlabel "|m|"
+set zlabel "m"
 
 
 #==================================================
@@ -68,7 +68,7 @@ set view map
 set ylabel norotate offset -1,0
 
 #set contour surf
-splot file1 u 1:6:3 w pm3d
+splot file1 u 1:6:4 w pm3d
 
 
 if (writepdf!=1) {
