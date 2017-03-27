@@ -22,7 +22,9 @@ output_name = "correctness.pdf"
 #             Set terminal
 #==================================================
 
-set term wxt enhanced
+if (writepdf!=1) {
+  set term qt enhanced
+}
 if (writepdf==1) {
   set term pdfcairo enhanced size 7in,4in dashed
   set output output_name
