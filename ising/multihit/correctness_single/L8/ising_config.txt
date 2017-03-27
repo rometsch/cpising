@@ -1,0 +1,30 @@
+# lattice width L
+8
+# minimum beta
+0.0
+# maximum beta
+1.0
+# number of data points to calculate (1 to use min beta)
+21
+# method
+multihit
+# seed
+0
+# number of tries for multihit
+1
+# adaptive number of tries (1->on, 0->off)
+0
+# number of thermalization steps
+100000
+# number of steps to destroy autocorrelation
+100
+# number of collected datapoints
+10000
+# output thermalization steps (1->on, 0->off)
+0
+# minimum h (external field)
+0.0
+# maximum h
+1.0
+# number of h's to calculate (1 to use min h)
+1
