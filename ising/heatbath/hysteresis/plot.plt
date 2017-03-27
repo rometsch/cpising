@@ -68,6 +68,7 @@ set samples 100000
 #             Plot
 #==================================================
 
+set grid
 
 set key bottom right
 set yrange [-1.1:1.1]
